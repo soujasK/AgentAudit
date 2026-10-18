@@ -1,1 +1,1 @@
-"""Unit test suite for AgentFail-Bench."""
+"""Unit test suite for AgentAudit."""

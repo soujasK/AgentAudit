@@ -1,5 +1,5 @@
 """
-Module 3: Adversarial Multi-Turn Runner & Token Optimizer (agentfail/runner.py)
+Module 3: Adversarial Multi-Turn Runner & Token Optimizer (agentaudit/runner.py)
 
 Executes multi-turn agent rollouts against live LLM APIs or deterministic frontier simulators.
 Tracks prompt/completion tokens, computes real-time dollar costs, and enforces active
@@ -13,9 +13,9 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
-from agentfail.environment import EnterpriseSandbox
-from agentfail.scenarios import Scenario
-from agentfail.types import (
+from agentaudit.environment import EnterpriseSandbox
+from agentaudit.scenarios import Scenario
+from agentaudit.types import (
     MODEL_PRICING,
     AgentStrategy,
     BenchmarkMetrics,
@@ -26,7 +26,7 @@ from agentfail.types import (
     Trajectory,
     Turn,
 )
-from agentfail.verifier import DeterministicVerifier, FailureTaxonomyClassifier
+from agentaudit.verifier import DeterministicVerifier, FailureTaxonomyClassifier
 
 
 @dataclass
@@ -454,7 +454,7 @@ class AgentRunner:
         Execute a head-to-head comparative benchmark across all scenarios:
         Baseline Naive vs. Guarded / Token-Optimized.
         """
-        from agentfail.scenarios import get_default_scenarios
+        from agentaudit.scenarios import get_default_scenarios
 
         target_scenarios = scenarios or get_default_scenarios()
         baseline_trajectories: List[Trajectory] = []

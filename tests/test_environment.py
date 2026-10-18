@@ -1,10 +1,10 @@
 """
-Unit tests for Module 1: EnterpriseSandbox (agentfail/environment.py)
+Unit tests for Module 1: EnterpriseSandbox (agentaudit/environment.py)
 """
 
 import unittest
-from agentfail.environment import EnterpriseSandbox, FaultConfig
-from agentfail.types import ToolCall
+from agentaudit.environment import EnterpriseSandbox, FaultConfig
+from agentaudit.types import ToolCall
 
 
 class TestEnterpriseSandbox(unittest.TestCase):

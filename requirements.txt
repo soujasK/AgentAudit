@@ -1,4 +1,4 @@
-# AgentFail-Bench executes out of the box using Python 3.11+ standard library.
+# AgentAudit executes out of the box using Python 3.11+ standard library.
 # Zero external mandatory dependencies are required for deterministic simulation and benchmarking.
 # Optional dependencies for live API calls or developer testing:
 # openai>=1.20.0

@@ -1,5 +1,5 @@
 """
-Module 2: Deterministic Oracle & Failure Taxonomy (agentfail/verifier.py)
+Module 2: Deterministic Oracle & Failure Taxonomy (agentaudit/verifier.py)
 
 Replaces fuzzy LLM-as-a-judge grading with programmatic, deterministic verification:
   - Ground-truth database state diff invariant assertions.
@@ -14,7 +14,7 @@ import sqlite3
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from agentfail.types import (
+from agentaudit.types import (
     FailureCategory,
     Observation,
     StepResult,

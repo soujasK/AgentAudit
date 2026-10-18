@@ -1,12 +1,12 @@
 """
-Adversarial enterprise benchmark scenarios for AgentFail-Bench.
+Adversarial enterprise benchmark scenarios for AgentAudit.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
-from agentfail.environment import FaultConfig
+from agentaudit.environment import FaultConfig
 
 
 @dataclass

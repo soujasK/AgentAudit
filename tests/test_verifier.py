@@ -3,8 +3,8 @@ Unit tests for Module 2: DeterministicVerifier, ASTValidator, and FailureTaxonom
 """
 
 import unittest
-from agentfail.types import FailureCategory, Observation, ToolCall, Trajectory, Turn
-from agentfail.verifier import ASTValidator, FailureTaxonomyClassifier, StateDiffOracle
+from agentaudit.types import FailureCategory, Observation, ToolCall, Trajectory, Turn
+from agentaudit.verifier import ASTValidator, FailureTaxonomyClassifier, StateDiffOracle
 
 
 class TestVerifier(unittest.TestCase):

@@ -1,5 +1,5 @@
 """
-Module 4: RL/DPO Signal Extractor (agentfail/synthesizer.py)
+Module 4: RL/DPO Signal Extractor (agentaudit/synthesizer.py)
 
 Converts paired trajectories (Guarded vs. Baseline Failures) into standardized
 Direct Preference Optimization (DPO) and RLHF training datasets.
@@ -13,7 +13,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from agentfail.types import DPOPreferencePair, FailureCategory, Trajectory, Turn
+from agentaudit.types import DPOPreferencePair, FailureCategory, Trajectory, Turn
 
 
 class DPOSynthesizer:

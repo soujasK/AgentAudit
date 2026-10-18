@@ -1,5 +1,5 @@
 """
-Module 1: Stateful Multi-Turn Tool Environment (agentfail/environment.py)
+Module 1: Stateful Multi-Turn Tool Environment (agentaudit/environment.py)
 
 Deterministic enterprise simulation sandbox representing an automated SQL database
 and API service layer with read/write state and configurable failure injection.
@@ -14,7 +14,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
-from agentfail.types import Observation, StepResult, ToolCall
+from agentaudit.types import Observation, StepResult, ToolCall
 
 
 @dataclass

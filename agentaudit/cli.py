@@ -1,10 +1,10 @@
 """
-CLI entrypoint for AgentFail-Bench (agentfail/cli.py).
+CLI entrypoint for AgentAudit (agentaudit/cli.py).
 
 Usage:
-    python -m agentfail.cli --benchmark
-    python -m agentfail.cli --benchmark --export-dpo dpo_dataset.jsonl
-    python -m agentfail.cli --model claude-3-5-sonnet --verbose
+    python -m agentaudit.cli --benchmark
+    python -m agentaudit.cli --benchmark --export-dpo dpo_dataset.jsonl
+    python -m agentaudit.cli --model claude-3-5-sonnet --verbose
 """
 
 from __future__ import annotations
@@ -14,11 +14,11 @@ import json
 import sys
 from typing import List
 
-from agentfail.environment import EnterpriseSandbox
-from agentfail.runner import AgentRunner
-from agentfail.scenarios import get_default_scenarios
-from agentfail.synthesizer import DPOSynthesizer
-from agentfail.types import AgentStrategy, BenchmarkMetrics, DPOPreferencePair, Trajectory
+from agentaudit.environment import EnterpriseSandbox
+from agentaudit.runner import AgentRunner
+from agentaudit.scenarios import get_default_scenarios
+from agentaudit.synthesizer import DPOSynthesizer
+from agentaudit.types import AgentStrategy, BenchmarkMetrics, DPOPreferencePair, Trajectory
 
 
 def format_table(headers: List[str], rows: List[List[str]]) -> str:
@@ -40,10 +40,10 @@ def format_table(headers: List[str], rows: List[List[str]]) -> str:
 
 
 def print_banner() -> None:
-    """Print AgentFail-Bench CLI banner."""
+    """Print AgentAudit CLI banner."""
     banner = """
 ================================================================================
-    AgentFail-Bench: Deterministic Stress-Testing & Trajectory DPO Harness
+        AgentAudit: Deterministic Stress-Testing & Trajectory DPO Harness
                    Frontier Multi-Turn Agent Evaluation Suite
 ================================================================================
 """
@@ -52,7 +52,7 @@ def print_banner() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="AgentFail-Bench: Deterministic Stress-Testing & Trajectory DPO Harness for Frontier Agents"
+        description="AgentAudit: Deterministic Stress-Testing & Trajectory DPO Harness for Frontier Agents"
     )
     parser.add_argument(
         "--benchmark",

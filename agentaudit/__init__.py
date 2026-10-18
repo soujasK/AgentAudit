@@ -1,10 +1,10 @@
 """
-AgentFail-Bench: Deterministic Stress-Testing & Trajectory DPO Harness for Multi-Turn Frontier Agents.
+AgentAudit: Deterministic Stress-Testing & Trajectory DPO Harness for Multi-Turn Frontier Agents.
 
 A production-grade RL sandbox and verification engine for autonomous enterprise agents.
 """
 
-from agentfail.types import (
+from agentaudit.types import (
     ToolCall,
     Observation,
     StepResult,
@@ -15,15 +15,15 @@ from agentfail.types import (
     DPOPreferencePair,
     AgentStrategy,
 )
-from agentfail.environment import EnterpriseSandbox
-from agentfail.verifier import (
+from agentaudit.environment import EnterpriseSandbox
+from agentaudit.verifier import (
     DeterministicVerifier,
     FailureTaxonomyClassifier,
     StateDiffOracle,
     ASTValidator,
 )
-from agentfail.runner import AgentRunner, CircuitBreakerGate
-from agentfail.synthesizer import DPOSynthesizer
+from agentaudit.runner import AgentRunner, CircuitBreakerGate
+from agentaudit.synthesizer import DPOSynthesizer
 
 __version__ = "1.0.0"
 __all__ = [

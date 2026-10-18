@@ -1,4 +1,4 @@
-# AgentFail-Bench: Turning Autonomous Agent Divergence into Deterministic Training Signals
+# AgentAudit: Turning Autonomous Agent Divergence into Deterministic Training Signals
 
 **Engineering Whitepaper & Technical Architecture Report**  
 *Author:* Principal AI Systems & Evaluation Engineering  
@@ -24,14 +24,14 @@ As frontier multi-turn agents move from conversational prototypes to enterprise 
                                                               |
                                                               v
 +------------------------+      Rollouts      +--------------------------------+      Pairs      +-------------------------+
-|      micro1 Realm      | -----------------> |       AgentFail-Bench          | --------------> |  RLHF / DPO Alignment   |
+|      micro1 Realm      | -----------------> |          AgentAudit            | --------------> |  RLHF / DPO Alignment   |
 | (Stateful Enterprise   |                    | (Stress-Testing, Circuit-Break,|                 | (Fine-Tuning & Offline  |
 |   Tool Environment)    | <----------------- |  Failure Taxonomy Classifier)  |                 |    Policy Training)     |
 +------------------------+     Backprop /     +--------------------------------+                 +-------------------------+
                                 RL Signals
 ```
 
-**AgentFail-Bench** is a production-grade, open-source evaluation and reinforcement learning harness engineered specifically to solve this gap. It provides:
+**AgentAudit** is a production-grade, open-source evaluation and reinforcement learning harness engineered specifically to solve this gap. It provides:
 - A **Stateful Enterprise Tool Sandbox** exposing relational SQL and API layers with deterministic state rollback, cryptographic state diffing, and configurable fault injection (schema drift, transient HTTP 429 rate limits, contextual safety policy traps).
 - A **Programmatic Verification Engine** that replaces fuzzy LLM grading with zero-tolerance AST syntax checks and database post-condition invariants (financial balance conservation, audit log immutability, idempotency enforcement).
 - A **Deterministic Failure Mode Taxonomy Classifier** categorizing agent divergence into five mutually exclusive classes: `CYCLIC_LOOP`, `SCHEMA_DRIFT_HALLUCINATION`, `POLICY_VIOLATION`, `CONTEXT_EXHAUSTION`, and `TIMEOUT_CRASH`.
@@ -46,7 +46,7 @@ The architecture operates across four modular subsystems designed for sub-millis
 
 ```
 +-------------------------------------------------------------------------------------------------------+
-|                                      AGENTFAIL-BENCH HARNESS                                          |
+|                                         AGENTAUDIT HARNESS                                            |
 +-------------------------------------------------------------------------------------------------------+
                                                     |
                                                     v
@@ -126,7 +126,7 @@ Evaluated across the full 5-scenario enterprise adversarial suite using standard
 
 In production agent platforms like micro1 Cortex, evaluation cannot rely on LLM-as-a-judge. Below is the comparative analysis:
 
-| Evaluation Dimension | Probabilistic "LLM-as-a-Judge" | Deterministic Programmatic Oracles (AgentFail-Bench) |
+| Evaluation Dimension | Probabilistic "LLM-as-a-Judge" | Deterministic Programmatic Oracles (AgentAudit) |
 | :--- | :--- | :--- |
 | **Evaluation Determinism** | Stochastic ($\sigma^2 > 0$); temperature drift changes grading across identical trajectories. | **Zero-Variance ($\sigma^2 = 0$);** exact mathematical & AST invariants. |
 | **Verification Latency** | 1,500 ms – 4,000 ms per judge API call. | **< 1.0 ms** local Python/SQLite execution. |
@@ -163,7 +163,7 @@ $$\mathcal{L}_{\text{DPO}}(\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l
 
 In multi-turn agent evaluation, standard DPO naively treats the entire sequence $y_l$ as equally bad. However, up to turn $T_{\text{div}} - 1$, the agent was often executing optimal actions.
 
-AgentFail-Bench formalizes **Sub-Trajectory Divergence Alignment**:
+AgentAudit formalizes **Sub-Trajectory Divergence Alignment**:
 
 $$T_{\text{div}} = \min \left\{ t \in [1, \min(|y_w|, |y_l|)] : a_t^w \ne a_t^l \right\}$$
 
@@ -185,7 +185,7 @@ This eliminates gradient noise during RLHF and accelerates policy convergence by
 
 ## 6. Failure Taxonomy & Root Cause Classifier
 
-AgentFail-Bench implements a deterministic 5-class failure classifier that inspects action signatures, sandbox exceptions, and state diffs:
+AgentAudit implements a deterministic 5-class failure classifier that inspects action signatures, sandbox exceptions, and state diffs:
 
 ```
                                       Failed Trajectory
@@ -223,32 +223,32 @@ AgentFail-Bench implements a deterministic 5-class failure classifier that inspe
 
 ## 7. CLI Reference & Quickstart
 
-AgentFail-Bench requires **Python 3.11+** and runs out of the box with **zero external dependencies**.
+AgentAudit requires **Python 3.11+** and runs out of the box with **zero external dependencies**.
 
 ### Installation
 ```bash
-git clone https://github.com/micro1/agentfail-bench.git
-cd agentfail-bench
+git clone https://github.com/soujasK/AgentAudit.git
+cd AgentAudit
 pip install -e .
 ```
 
 ### Running the Full Comparative Benchmark
 ```bash
-python -m agentfail.cli --benchmark
+python -m agentaudit.cli --benchmark
 ```
 
 ### Exporting DPO Preference Dataset
 ```bash
-python -m agentfail.cli --benchmark --export-dpo dpo_dataset.jsonl
+python -m agentaudit.cli --benchmark --export-dpo dpo_dataset.jsonl
 ```
 
 ### Evaluating Specific Frontier Model Profiles
 ```bash
 # Evaluate Claude 3.5 Sonnet pricing & behavioral profile
-python -m agentfail.cli --model claude-3-5-sonnet
+python -m agentaudit.cli --model claude-3-5-sonnet
 
 # Verbose execution with turn-by-turn trace inspections
-python -m agentfail.cli --model gpt-4o --verbose
+python -m agentaudit.cli --model gpt-4o --verbose
 ```
 
 ### Running Unit Test Verification Suite
@@ -262,8 +262,8 @@ python -m unittest discover tests
 ## 8. Directory & Module Structure
 
 ```
-micro1/
-├── agentfail/
+AgentAudit/
+├── agentaudit/
 │   ├── __init__.py           # Package exports & versioning
 │   ├── types.py              # Data structures: ToolCall, StepResult, Trajectory, Turn, FailureCategory
 │   ├── environment.py        # Module 1: Enterprise relational sandbox, state diffing, fault injector
@@ -288,7 +288,7 @@ micro1/
 
 ## 9. Conclusion & Strategic Value for micro1
 
-By combining deterministic RL sandboxes (**micro1 Realm**) with zero-tolerance programmatic verification (**micro1 Cortex**), **AgentFail-Bench** transforms autonomous agent evaluation:
+By combining deterministic RL sandboxes (**micro1 Realm**) with zero-tolerance programmatic verification (**micro1 Cortex**), **AgentAudit** transforms autonomous agent evaluation:
 - It eliminates the high cost, latency, and noise of LLM-as-a-judge evaluators.
 - It protects enterprise budgets by intercepting runaway loops at Turn 1.2 before token costs explode.
 - It automates the generation of pristine, divergence-annotated DPO datasets, creating a virtuous data flywheel for fine-tuning the next generation of resilient frontier models.

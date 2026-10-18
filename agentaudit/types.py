@@ -1,5 +1,5 @@
 """
-Core type definitions and data structures for AgentFail-Bench.
+Core type definitions and data structures for AgentAudit.
 """
 
 from __future__ import annotations

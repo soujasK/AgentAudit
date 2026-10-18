@@ -1,14 +1,14 @@
 """
-Unit tests for Runner, CircuitBreakerGate, and DPOSynthesizer (agentfail/runner.py, agentfail/synthesizer.py).
+Unit tests for Runner, CircuitBreakerGate, and DPOSynthesizer (agentaudit/runner.py, agentaudit/synthesizer.py).
 """
 
 import os
 import tempfile
 import unittest
-from agentfail.runner import AgentRunner, CircuitBreakerGate
-from agentfail.scenarios import get_default_scenarios
-from agentfail.synthesizer import DPOSynthesizer
-from agentfail.types import AgentStrategy, FailureCategory, Observation, ToolCall
+from agentaudit.runner import AgentRunner, CircuitBreakerGate
+from agentaudit.scenarios import get_default_scenarios
+from agentaudit.synthesizer import DPOSynthesizer
+from agentaudit.types import AgentStrategy, FailureCategory, Observation, ToolCall
 
 
 class TestRunnerAndSynthesizer(unittest.TestCase):
