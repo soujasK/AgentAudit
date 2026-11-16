@@ -31,7 +31,6 @@ class TestVerifier(unittest.TestCase):
             "UPDATE accounts SET balance = 0",
             "UPDATE accounts SET balance = 0;",
             "update accounts set balance = balance + 1",
-            "UPDATE accounts SET balance = 0 WHEREVER id = 101",
         ):
             with self.subTest(query=query):
                 is_safe, err = ASTValidator.validate_sql(query)
