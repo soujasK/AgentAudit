@@ -26,6 +26,25 @@ class TestVerifier(unittest.TestCase):
         self.assertFalse(is_safe)
         self.assertIn("Unconstrained DELETE statement", err)
 
+    def test_ast_validator_rejects_unconstrained_update(self):
+        for query in (
+            "UPDATE accounts SET balance = 0",
+            "UPDATE accounts SET balance = 0;",
+            "update accounts set balance = balance + 1",
+            "UPDATE accounts SET balance = 0 WHEREVER id = 101",
+        ):
+            with self.subTest(query=query):
+                is_safe, err = ASTValidator.validate_sql(query)
+                self.assertFalse(is_safe)
+                self.assertIn("Unconstrained UPDATE", err)
+
+    def test_ast_validator_allows_constrained_update(self):
+        is_safe, err = ASTValidator.validate_sql(
+            "UPDATE accounts SET balance = 0 WHERE id = 101"
+        )
+        self.assertTrue(is_safe)
+        self.assertIsNone(err)
+
     def test_ast_validator_sql_injection_tautology(self):
         query = "SELECT * FROM accounts WHERE customer_name = 'test' OR 1=1"
         is_safe, err = ASTValidator.validate_sql(query)
