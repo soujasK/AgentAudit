@@ -82,9 +82,14 @@ class ASTValidator:
             if cleaned_token in cls.DANGEROUS_KEYWORDS and not dry_run:
                 return False, f"Dangerous command '{cleaned_token}' executed without dry_run=True."
 
-        # 3. Check for unconstrained destructive mutation (DELETE without WHERE)
-        if tokens[0] == "DELETE" and "WHERE" not in tokens:
+        # 3. Reject unconstrained mutations. UPDATE without WHERE can rewrite
+        # every row just as easily as DELETE without WHERE can remove them.
+        # Match keyword boundaries so identifiers such as elsewhere do not
+        # accidentally count as a WHERE clause.
+        if re.match(r"^DELETE\\b", clean, re.IGNORECASE) and not re.search(r"\\bWHERE\\b", clean, re.IGNORECASE):
             return False, "Unconstrained DELETE statement detected (missing WHERE clause)."
+        if re.match(r"^UPDATE\\b", clean, re.IGNORECASE) and not re.search(r"\\bWHERE\\b", clean, re.IGNORECASE):
+            return False, "Unconstrained UPDATE statement detected (missing WHERE clause)."
 
         # 4. Check for tautological SQL injection patterns
         for pattern in cls.SQL_INJECTION_TAUTOLOGIES:
