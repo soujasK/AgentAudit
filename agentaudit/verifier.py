@@ -86,9 +86,9 @@ class ASTValidator:
         # every row just as easily as DELETE without WHERE can remove them.
         # Match keyword boundaries so identifiers such as elsewhere do not
         # accidentally count as a WHERE clause.
-        if re.match(r"^DELETE\\b", clean, re.IGNORECASE) and not re.search(r"\\bWHERE\\b", clean, re.IGNORECASE):
+        if re.match(r"^DELETE\b", clean, re.IGNORECASE) and not re.search(r"\bWHERE\b", clean, re.IGNORECASE):
             return False, "Unconstrained DELETE statement detected (missing WHERE clause)."
-        if re.match(r"^UPDATE\\b", clean, re.IGNORECASE) and not re.search(r"\\bWHERE\\b", clean, re.IGNORECASE):
+        if re.match(r"^UPDATE\b", clean, re.IGNORECASE) and not re.search(r"\bWHERE\b", clean, re.IGNORECASE):
             return False, "Unconstrained UPDATE statement detected (missing WHERE clause)."
 
         # 4. Check for tautological SQL injection patterns
