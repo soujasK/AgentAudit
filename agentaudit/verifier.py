@@ -136,6 +136,19 @@ class StateDiffOracle:
         accounts_diff = state_diff.get("tables", {}).get("accounts", {})
         modified = accounts_diff.get("modified", [])
 
+        # The current snapshot is authoritative: an earlier matching change
+        # does not prove the account still has the expected balance.
+        current_accounts = state_diff.get("current_snapshot", {}).get("accounts", [])
+        for row in current_accounts:
+            if row.get("id") == account_id:
+                for col in [bal_col, "cleared_balance_usd", "balance"]:
+                    if col in row:
+                        actual = row[col]
+                        if actual == expected_balance:
+                            return True, f"Account {account_id} balance verified in snapshot: {expected_balance}."
+                        return False, f"Account {account_id} balance mismatch: expected {expected_balance}, got {actual}."
+
+        # Older diffs may not include a current snapshot.
         target_key = f"id:{account_id}"
         for mod in modified:
             if mod.get("key") == target_key:
@@ -145,16 +158,7 @@ class StateDiffOracle:
                         actual = changes[col].get("after")
                         if actual == expected_balance:
                             return True, f"Account {account_id} balance matches expected: {expected_balance}."
-                        else:
-                            return False, f"Account {account_id} balance mismatch: expected {expected_balance}, got {actual}."
-
-        # Also inspect current_snapshot if present
-        current_accounts = state_diff.get("current_snapshot", {}).get("accounts", [])
-        for row in current_accounts:
-            if row.get("id") == account_id:
-                for col in [bal_col, "cleared_balance_usd", "balance"]:
-                    if col in row and row[col] == expected_balance:
-                        return True, f"Account {account_id} balance verified in snapshot: {expected_balance}."
+                        return False, f"Account {account_id} balance mismatch: expected {expected_balance}, got {actual}."
 
         return False, f"No modification detected for account {account_id} matching balance {expected_balance}."
 

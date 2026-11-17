@@ -59,6 +59,28 @@ class TestVerifier(unittest.TestCase):
         ok, msg = StateDiffOracle.verify_financial_conservation(diff_fail)
         self.assertFalse(ok)
 
+    def test_account_balance_uses_current_snapshot_over_stale_diff(self):
+        state = {
+            "tables": {"accounts": {"modified": [
+                {"key": "id:101", "changes": {"balance": {"after": 500.0}}}
+            ]}},
+            "current_snapshot": {"accounts": [{"id": 101, "balance": 400.0}]},
+        }
+        ok, message = StateDiffOracle.verify_target_account_balance(state, 101, 500.0)
+        self.assertFalse(ok)
+        self.assertIn("mismatch", message)
+
+        state["current_snapshot"]["accounts"][0]["balance"] = 500.0
+        ok, _ = StateDiffOracle.verify_target_account_balance(state, 101, 500.0)
+        self.assertTrue(ok)
+
+    def test_account_balance_falls_back_to_diff_without_snapshot(self):
+        state = {"tables": {"accounts": {"modified": [
+            {"key": "id:101", "changes": {"balance": {"after": 500.0}}}
+        ]}}}
+        ok, _ = StateDiffOracle.verify_target_account_balance(state, 101, 500.0)
+        self.assertTrue(ok)
+
     def test_failure_classifier_cyclic_loop(self):
         traj = Trajectory(scenario_id="s_loop", agent_strategy="BASELINE_NAIVE", model="gpt-4o", prompt="test")
         repeated_call = ToolCall(name="sql_query", arguments={"query": "SELECT * FROM accounts"})
