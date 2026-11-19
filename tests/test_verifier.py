@@ -14,6 +14,28 @@ class TestVerifier(unittest.TestCase):
         self.assertTrue(is_safe)
         self.assertIsNone(err)
 
+    def test_ast_validator_rejects_incomplete_or_malformed_sql(self):
+        for query in (
+            "SELECT * FROM",
+            "SELECT FROM accounts",
+            "UPDATE accounts SET",
+            "INSERT INTO accounts (id) VALUES (",
+        ):
+            with self.subTest(query=query):
+                is_safe, err = ASTValidator.validate_sql(query)
+                self.assertFalse(is_safe)
+                self.assertIn("SQL Syntax Error", err)
+
+    def test_ast_validator_allows_unresolved_schema_during_parse(self):
+        for query in (
+            "SELECT id FROM unknown_table",
+            "UPDATE unknown_table SET balance = 0 WHERE id = 101",
+        ):
+            with self.subTest(query=query):
+                is_safe, err = ASTValidator.validate_sql(query)
+                self.assertTrue(is_safe)
+                self.assertIsNone(err)
+
     def test_ast_validator_dangerous_drop(self):
         query = "DROP TABLE accounts"
         is_safe, err = ASTValidator.validate_sql(query, dry_run=False)
