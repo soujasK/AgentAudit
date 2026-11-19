@@ -64,17 +64,19 @@ class ASTValidator:
         clean = query.strip()
         tokens = [t.upper() for t in re.split(r"\s+", clean) if t]
 
-        # 1. Syntax check via SQLite parser compilation
+        # 1. Syntax check via SQLite parser compilation.
+        # The validator has no application schema, so unresolved tables/columns
+        # are expected. Other parser errors (including incomplete statements)
+        # must fail closed instead of being treated as valid SQL.
+        conn = sqlite3.connect(":memory:")
         try:
-            conn = sqlite3.connect(":memory:")
-            # Use explain query plan to validate syntax without execution side effects
             conn.execute(f"EXPLAIN {clean}")
-            conn.close()
-        except sqlite3.OperationalError as e:
+        except sqlite3.Error as e:
             err = str(e).lower()
-            # If error is just missing table, syntax is valid SQLite
-            if not ("no such table" in err or "no such column" in err or "near" not in err):
-                return False, f"SQL Syntax Error: {str(e)}"
+            if not (err.startswith("no such table:") or err.startswith("no such column:")):
+                return False, f"SQL Syntax Error: {e}"
+        finally:
+            conn.close()
 
         # 2. Dangerous keyword check
         for token in tokens:
